@@ -18,14 +18,14 @@ if [ -d dist ]; then
   for platform in "${platforms[@]}"
   do
 
-  docker build --build-arg "ASSET_GEM=${GEM_NAME}" -t ruby-plugin-${platform} -f ${WDIR}/ruby26-runtime/Dockerfile.${platform} .
+  docker build --build-arg "ASSET_GEM=${GEM_NAME}" --build-arg "CHECKOUT_PATH=${PWD}" -t ruby-plugin-${platform} -f ${WDIR}/ruby-runtime/Dockerfile.${platform} .
   status=$?
   if test $status -ne 0; then
         echo "Docker build for platform: ${platform} failed with status: ${status}"
         exit 1
   fi
-
-  docker cp $(docker create --rm ruby-plugin-${platform}:latest sleep 0):/${GEM_NAME}.tar.gz ./dist/${GEM_NAME}_${TAG}_${platform}_linux_amd64.tar.gz
+  echo "Docker Create"
+  docker cp $(docker create --rm ruby-plugin-${platform}:latest sleep 0 -v):/${GEM_NAME}.tar.gz ./dist/${GEM_NAME}_${TAG}_${platform}_linux_amd64.tar.gz
   status=$?
   if test $status -ne 0; then
         echo "Docker cp for platform: ${platform} failed with status: ${status}"
