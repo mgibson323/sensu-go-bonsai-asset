@@ -12,7 +12,13 @@ echo $GEM_NAME
 
 mkdir dist
 
-platforms=( centos7 )
+if [[ -z "$2" ]]; then
+  #echo "Parameter 2, PLATFORMS is empty, using default set" ; platforms=( alpine alpine3.8 debian debian9 centos8 centos7 centos6 )
+  echo "Parameter 2, PLATFORMS is empty, using default set" ; platforms=( alpine centos7 )
+else
+  IFS=', ' read -r -a platforms <<< "$2"
+fi
+
 ruby_version=2.4.4
 if [ -d dist ]; then
   for platform in "${platforms[@]}"
