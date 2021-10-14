@@ -4,10 +4,10 @@ ARG ASSET_GEM
 
 WORKDIR /assets/build/
 RUN yum install -y git 
-COPY . /checkout
+COPY . /assets/build/include/checkout
 RUN \
   gem install --no-ri --no-doc bundler && \
-  printf "source 'https://rubygems.org'\n\ngem '%s', :path => '/checkout'\n" ${ASSET_GEM}| tee Gemfile 
+  printf "source 'https://rubygems.org'\n\ngem '%s', :path => './include/checkout'\n" ${ASSET_GEM}| tee Gemfile 
 RUN cat Gemfile
 RUN bundle install --path=lib/ --binstubs=bin/ --standalone 
 RUN tar -czf /assets/${ASSET_GEM}.tar.gz -C /assets/build/ .
