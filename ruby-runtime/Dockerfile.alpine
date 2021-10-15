@@ -10,7 +10,16 @@ RUN ruby --version
 RUN whoami
 RUN ls -lart /opt/rubies/ruby-2.4.4/lib/ruby/gems/2.4.0 
 RUN gem install --no-ri --no-doc bundler 
-COPY . /assets/build/include/checkout
+
+RUN mkdir -p /assets/build/include/checkout/
+COPY *.gemspec /assets/build/include/checkout/
+COPY Gemfile /assets/build/include/checkout/
+RUN ls -la /assets/build/include/checkout
+COPY bin/ /assets/build/include/checkout/bin/
+RUN ls -la /assets/build/include/checkout/bin
+COPY lib/ /assets/build/include/checkout/lib/
+RUN ls -la /assets/build/include/checkout/lib
+
 RUN printf "source 'https://rubygems.org'\n\ngem '%s', :path => './include/checkout'\n" ${ASSET_GEM}| tee Gemfile
 RUN bundle install --path=lib/ --binstubs=bin/ --standalone 
 RUN tar -czf /assets/${ASSET_GEM}.tar.gz -C /assets/build/ .
